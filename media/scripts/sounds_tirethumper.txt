@@ -1,0 +1,68 @@
+module Base
+{
+    sound TireThumper_flat1
+    {
+        category = Vehicle,
+        clip
+        {
+            file = media/sound/TireThumper/flat1.ogg,
+            distanceMax = 5,
+            volume = 0.25,
+        }
+    }
+
+    sound TireThumper_flat2
+    {
+        category = Vehicle,
+        clip
+        {
+            file = media/sound/TireThumper/flat2.ogg,
+            distanceMax = 5,
+            volume = 0.25,
+        }
+    }
+
+    sound TireThumper_flat3
+    {
+        category = Vehicle,
+        clip
+        {
+            file = media/sound/TireThumper/flat3.ogg,
+            distanceMax = 5,
+            volume = 0.25,
+        }
+    }
+
+    sound TireThumper_flat4
+    {
+        category = Vehicle,
+        clip
+        {
+            file = media/sound/TireThumper/flat4.ogg,
+            distanceMax = 5,
+            volume = 0.25,
+        }
+    }
+
+    sound TireThumper_flat5
+    {
+        category = Vehicle,
+        clip
+        {
+            file = media/sound/TireThumper/flat5.ogg,
+            distanceMax = 5,
+            volume = 0.25,
+        }
+    }
+
+    sound TireThumper_flat6
+    {
+        category = Vehicle,
+        clip
+        {
+            file = media/sound/TireThumper/flat6.ogg,
+            distanceMax = 5,
+            volume = 0.25,
+        }
+    }
+}

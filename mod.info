@@ -1,0 +1,6 @@
+name=Tire Thumper
+id=TireThumper
+description=That rhythmic thudding you hear when driving on a flat tire? Now you'll hear it in Project Zomboid. Tire Thumper plays immersive thumping sounds when your tire pressure drops low enough to matter — no HUD, no pop-up, just that sinking feeling as the thumping gets faster and louder the harder you push it. Thump frequency and volume both scale with speed and pressure severity, so a barely-flat tire at 25 mph is a quiet warning. Six randomized audio samples keep it sounding natural. Tip: If you hear it, you probably already knew. You just didn't want to stop.
+poster=poster.png
+modversion=1.0
+pzversion=42

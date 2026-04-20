@@ -1,0 +1,2 @@
+-- Sounds are defined in media/scripts/sounds_tirethumper.txt
+-- No Lua registration needed.
