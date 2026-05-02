@@ -8,11 +8,11 @@ Experience that sinking feeling as the thumping gets faster and louder the harde
 
 ## Features
 
-- Triggers only when pressure is genuinely low — not just slightly off
+- Triggers only when pressure is genuinely low
 - Thump frequency and volume increase with speed
 - Quieter when zoomed out — louder when zoomed in close to your vehicle
 - 6 unique audio samples, randomly selected each thump for a natural feel
-- Works in multiplayer — client-side only, no server required
+- Works in multiplayer — client-side only
 
 ## How It Works
 
