@@ -1,32 +1,41 @@
 -- TireThumper — Build 42
 -- Plays rhythmic thumping sounds when driving on a flat tire.
--- Frequency and volume scale with speed and pressure severity.
 
 local PRESSURE_THRESHOLD = 0.30  -- trigger below this pressure ratio (0–1)
-local MIN_SPEED_KMH      = 21    -- no sound below this speed
-local REF_SPEED_KMH      = 21    -- baseline speed for interval calculation
-local FULL_VOL_SPEED_KMH = 81    -- speed at which volume reaches maximum
-local MAX_SPEED_KMH      = 81    -- interval stops shortening above this speed
-local BASE_INTERVAL      = 50    -- ticks between thumps at ref speed (~1.7 s)
-local MIN_INTERVAL       = 6     -- minimum ticks between thumps (~0.2 s)
-local BLOWOUT_PSI        = 5     -- PSI at or below which pressure is treated as maximum severity
-local MASTER_VOLUME      = 0.50  -- global volume scalar (reduce if too loud)
 
-local SOUND_NAMES = {
-    "TireThumper_flat1", "TireThumper_flat2", "TireThumper_flat3",
-    "TireThumper_flat4", "TireThumper_flat5", "TireThumper_flat6",
+-- Zoom thresholds (lower = more zoomed in, vanilla range ~0.5–2.5)
+local ZOOM_SILENT = 2.0   -- at or above: no sound
+local ZOOM_CLOSE  = 1.0   -- below: use close-zoom sound set
+
+local SOUNDS = {
+    slow         = { "TireThumper_flat1_slow",         "TireThumper_flat2_slow",         "TireThumper_flat3_slow",         "TireThumper_flat4_slow",         "TireThumper_flat5_slow",         "TireThumper_flat6_slow"         },
+    fast         = { "TireThumper_flat1_fast",         "TireThumper_flat2_fast",         "TireThumper_flat3_fast",         "TireThumper_flat4_fast",         "TireThumper_flat5_fast",         "TireThumper_flat6_fast"         },
+    faster       = { "TireThumper_flat1_faster",       "TireThumper_flat2_faster",       "TireThumper_flat3_faster",       "TireThumper_flat4_faster",       "TireThumper_flat5_faster",       "TireThumper_flat6_faster"       },
+    slow_close   = { "TireThumper_flat1_slow_close",   "TireThumper_flat2_slow_close",   "TireThumper_flat3_slow_close",   "TireThumper_flat4_slow_close",   "TireThumper_flat5_slow_close",   "TireThumper_flat6_slow_close"   },
+    fast_close   = { "TireThumper_flat1_fast_close",   "TireThumper_flat2_fast_close",   "TireThumper_flat3_fast_close",   "TireThumper_flat4_fast_close",   "TireThumper_flat5_fast_close",   "TireThumper_flat6_fast_close"   },
+    faster_close = { "TireThumper_flat1_faster_close", "TireThumper_flat2_faster_close", "TireThumper_flat3_faster_close", "TireThumper_flat4_faster_close", "TireThumper_flat5_faster_close", "TireThumper_flat6_faster_close" },
 }
 
-local TIRE_SLOTS = {
-    "TireFrontLeft", "TireFrontRight",
-    "TireRearLeft",  "TireRearRight",
+-- Interval: linear from 2.0 s at MIN_SPEED to 0.2 s at MAX_SPEED
+local MIN_SPEED    = 21
+local MAX_SPEED    = 81
+local INTERVAL_MAX = 2.0   -- seconds at min speed
+local INTERVAL_MIN = 0.2   -- seconds at max speed
+
+-- Speed tiers (sound pool selection only — interval is continuous)
+local TIERS = {
+    { min = 21, pool = SOUNDS.slow,   poolClose = SOUNDS.slow_close   },  -- SLOW
+    { min = 51, pool = SOUNDS.fast,   poolClose = SOUNDS.fast_close   },  -- FAST
+    { min = 81, pool = SOUNDS.faster, poolClose = SOUNDS.faster_close },  -- FASTER
 }
+
+local TIRE_SLOTS = { "TireFrontLeft", "TireFrontRight", "TireRearLeft", "TireRearRight" }
 
 local thumpTimer = 0
 local active     = false
 
 local function getWorstTire(vehicle)
-    local worstRatio, worstPsi
+    local worstRatio
     for _, slot in ipairs(TIRE_SLOTS) do
         local part = vehicle:getPartById(slot)
         if part then
@@ -34,68 +43,34 @@ local function getWorstTire(vehicle)
             local cap = part:getContainerCapacity()
             if cur and cap and cap > 0 then
                 local ratio = cur / cap
-                if not worstRatio or ratio < worstRatio then
-                    worstRatio = ratio
-                    worstPsi   = cur
-                end
+                if not worstRatio or ratio < worstRatio then worstRatio = ratio end
             end
         end
     end
-    return worstRatio, worstPsi
+    return worstRatio
 end
 
-local function calcInterval(ratio, speedKmh)
-    local t = ratio / PRESSURE_THRESHOLD
+local function getTier(speedKmh)
+    local tier
+    for _, t in ipairs(TIERS) do
+        if speedKmh >= t.min then tier = t end
+    end
+    return tier
+end
+
+local function calcInterval(speedKmh)
+    local t = (speedKmh - MIN_SPEED) / (MAX_SPEED - MIN_SPEED)
     if t < 0 then t = 0 elseif t > 1 then t = 1 end
-    local pressureInterval = math.floor(MIN_INTERVAL + t * (BASE_INTERVAL - MIN_INTERVAL))
-
-    local speedFactor = speedKmh / REF_SPEED_KMH
-    if speedFactor > MAX_SPEED_KMH / REF_SPEED_KMH then speedFactor = MAX_SPEED_KMH / REF_SPEED_KMH end
-    if speedFactor < 0.01 then speedFactor = 0.01 end
-
-    local interval = math.floor(pressureInterval / speedFactor)
-    if interval < MIN_INTERVAL  then interval = MIN_INTERVAL  end
-    if interval > BASE_INTERVAL then interval = BASE_INTERVAL end
-    return interval
+    local secs = INTERVAL_MAX - t * (INTERVAL_MAX - INTERVAL_MIN)
+    return math.max(1, math.floor(secs * 30))
 end
 
-local function calcVolume(ratio, psi, speedKmh)
-    local pressureSeverity
-    if psi and psi <= BLOWOUT_PSI then
-        pressureSeverity = 1.0
-    else
-        pressureSeverity = (PRESSURE_THRESHOLD - ratio) / PRESSURE_THRESHOLD
-        if pressureSeverity < 0    then pressureSeverity = 0    end
-        if pressureSeverity > 0.75 then pressureSeverity = 0.75 end
-    end
-
-    local speedFraction = (speedKmh - MIN_SPEED_KMH) / (FULL_VOL_SPEED_KMH - MIN_SPEED_KMH)
-    if speedFraction < 0 then speedFraction = 0 end
-    if speedFraction > 1 then speedFraction = 1 end
-    local speedSeverity = 0.25 + 0.75 * speedFraction
-
-    local vol = pressureSeverity * speedSeverity * MASTER_VOLUME
-    vol = vol * (1.0 + (ZombRand(11) - 5) / 100.0)  -- ±5% jitter
-    if vol < 0 then vol = 0 end
-    if vol > 1 then vol = 1 end
-    return vol
-end
-
-local function playThump(player, vol)
-    local name    = SOUND_NAMES[ZombRand(#SOUND_NAMES) + 1]
-    local emitter = player:getEmitter()
+local function playThump(player, pool)
+    local name     = pool[ZombRand(#pool) + 1]
+    local emitter  = player:getEmitter()
     local soundRef = 0
-
-    if emitter then
-        soundRef = emitter:playSound(name)
-        if soundRef ~= 0 and emitter.setVolume then
-            emitter:setVolume(soundRef, vol)
-        end
-    end
-
-    if soundRef == 0 then
-        getSoundManager():playUISound(name)
-    end
+    if emitter then soundRef = emitter:playSound(name) end
+    if soundRef == 0 then getSoundManager():playUISound(name) end
 end
 
 local function onTick()
@@ -105,31 +80,34 @@ local function onTick()
     local vehicle = player:getVehicle()
     if not vehicle or vehicle:getDriver() ~= player then
         thumpTimer = 0
-        active = false
+        active     = false
         return
     end
 
-    local speed           = math.abs(vehicle:getCurrentSpeedKmHour())
-    local ratio, worstPsi = getWorstTire(vehicle)
+    local zoom  = getCore():getZoom(0)
+    local speed = math.abs(vehicle:getCurrentSpeedKmHour())
+    local ratio = getWorstTire(vehicle)
+    local tier  = getTier(speed)
 
-    if not ratio or ratio >= PRESSURE_THRESHOLD or speed < MIN_SPEED_KMH then
+    if not ratio or ratio >= PRESSURE_THRESHOLD or not tier or zoom >= ZOOM_SILENT then
         thumpTimer = 0
-        active = false
+        active     = false
         return
     end
 
-    local interval = calcInterval(ratio, speed)
+    local pool     = (zoom < ZOOM_CLOSE) and tier.poolClose or tier.pool
+    local interval = calcInterval(speed)
 
     if not active then
         active     = true
-        thumpTimer = interval  -- trigger immediately on first detection
+        thumpTimer = interval  -- fire immediately on first detection
     else
         thumpTimer = thumpTimer + 1
     end
 
     if thumpTimer >= interval then
         thumpTimer = 0
-        playThump(player, calcVolume(ratio, worstPsi, speed))
+        playThump(player, pool)
     end
 end
 

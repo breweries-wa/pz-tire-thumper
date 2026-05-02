@@ -1,68 +1,46 @@
 module Base
 {
-    sound TireThumper_flat1
-    {
-        category = Vehicle,
-        clip
-        {
-            file = media/sound/TireThumper/flat1.ogg,
-            distanceMax = 5,
-            volume = 0.25,
-        }
-    }
+    -- Normal zoom (1.0 – 2.0)
+    sound TireThumper_flat1_slow { category = Vehicle, clip { file = media/sound/TireThumper/flat1.ogg, distanceMax = 5, volume = 0.15, } }
+    sound TireThumper_flat2_slow { category = Vehicle, clip { file = media/sound/TireThumper/flat2.ogg, distanceMax = 5, volume = 0.15, } }
+    sound TireThumper_flat3_slow { category = Vehicle, clip { file = media/sound/TireThumper/flat3.ogg, distanceMax = 5, volume = 0.15, } }
+    sound TireThumper_flat4_slow { category = Vehicle, clip { file = media/sound/TireThumper/flat4.ogg, distanceMax = 5, volume = 0.15, } }
+    sound TireThumper_flat5_slow { category = Vehicle, clip { file = media/sound/TireThumper/flat5.ogg, distanceMax = 5, volume = 0.15, } }
+    sound TireThumper_flat6_slow { category = Vehicle, clip { file = media/sound/TireThumper/flat6.ogg, distanceMax = 5, volume = 0.15, } }
 
-    sound TireThumper_flat2
-    {
-        category = Vehicle,
-        clip
-        {
-            file = media/sound/TireThumper/flat2.ogg,
-            distanceMax = 5,
-            volume = 0.25,
-        }
-    }
+    sound TireThumper_flat1_fast { category = Vehicle, clip { file = media/sound/TireThumper/flat1.ogg, distanceMax = 5, volume = 0.20, } }
+    sound TireThumper_flat2_fast { category = Vehicle, clip { file = media/sound/TireThumper/flat2.ogg, distanceMax = 5, volume = 0.20, } }
+    sound TireThumper_flat3_fast { category = Vehicle, clip { file = media/sound/TireThumper/flat3.ogg, distanceMax = 5, volume = 0.20, } }
+    sound TireThumper_flat4_fast { category = Vehicle, clip { file = media/sound/TireThumper/flat4.ogg, distanceMax = 5, volume = 0.20, } }
+    sound TireThumper_flat5_fast { category = Vehicle, clip { file = media/sound/TireThumper/flat5.ogg, distanceMax = 5, volume = 0.20, } }
+    sound TireThumper_flat6_fast { category = Vehicle, clip { file = media/sound/TireThumper/flat6.ogg, distanceMax = 5, volume = 0.20, } }
 
-    sound TireThumper_flat3
-    {
-        category = Vehicle,
-        clip
-        {
-            file = media/sound/TireThumper/flat3.ogg,
-            distanceMax = 5,
-            volume = 0.25,
-        }
-    }
+    sound TireThumper_flat1_faster { category = Vehicle, clip { file = media/sound/TireThumper/flat1.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat2_faster { category = Vehicle, clip { file = media/sound/TireThumper/flat2.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat3_faster { category = Vehicle, clip { file = media/sound/TireThumper/flat3.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat4_faster { category = Vehicle, clip { file = media/sound/TireThumper/flat4.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat5_faster { category = Vehicle, clip { file = media/sound/TireThumper/flat5.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat6_faster { category = Vehicle, clip { file = media/sound/TireThumper/flat6.ogg, distanceMax = 5, volume = 0.25, } }
 
-    sound TireThumper_flat4
-    {
-        category = Vehicle,
-        clip
-        {
-            file = media/sound/TireThumper/flat4.ogg,
-            distanceMax = 5,
-            volume = 0.25,
-        }
-    }
+    -- Close zoom (< 1.0)
+    sound TireThumper_flat1_slow_close { category = Vehicle, clip { file = media/sound/TireThumper/flat1.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat2_slow_close { category = Vehicle, clip { file = media/sound/TireThumper/flat2.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat3_slow_close { category = Vehicle, clip { file = media/sound/TireThumper/flat3.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat4_slow_close { category = Vehicle, clip { file = media/sound/TireThumper/flat4.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat5_slow_close { category = Vehicle, clip { file = media/sound/TireThumper/flat5.ogg, distanceMax = 5, volume = 0.25, } }
+    sound TireThumper_flat6_slow_close { category = Vehicle, clip { file = media/sound/TireThumper/flat6.ogg, distanceMax = 5, volume = 0.25, } }
 
-    sound TireThumper_flat5
-    {
-        category = Vehicle,
-        clip
-        {
-            file = media/sound/TireThumper/flat5.ogg,
-            distanceMax = 5,
-            volume = 0.25,
-        }
-    }
+    sound TireThumper_flat1_fast_close { category = Vehicle, clip { file = media/sound/TireThumper/flat1.ogg, distanceMax = 5, volume = 0.30, } }
+    sound TireThumper_flat2_fast_close { category = Vehicle, clip { file = media/sound/TireThumper/flat2.ogg, distanceMax = 5, volume = 0.30, } }
+    sound TireThumper_flat3_fast_close { category = Vehicle, clip { file = media/sound/TireThumper/flat3.ogg, distanceMax = 5, volume = 0.30, } }
+    sound TireThumper_flat4_fast_close { category = Vehicle, clip { file = media/sound/TireThumper/flat4.ogg, distanceMax = 5, volume = 0.30, } }
+    sound TireThumper_flat5_fast_close { category = Vehicle, clip { file = media/sound/TireThumper/flat5.ogg, distanceMax = 5, volume = 0.30, } }
+    sound TireThumper_flat6_fast_close { category = Vehicle, clip { file = media/sound/TireThumper/flat6.ogg, distanceMax = 5, volume = 0.30, } }
 
-    sound TireThumper_flat6
-    {
-        category = Vehicle,
-        clip
-        {
-            file = media/sound/TireThumper/flat6.ogg,
-            distanceMax = 5,
-            volume = 0.25,
-        }
-    }
+    sound TireThumper_flat1_faster_close { category = Vehicle, clip { file = media/sound/TireThumper/flat1.ogg, distanceMax = 5, volume = 0.35, } }
+    sound TireThumper_flat2_faster_close { category = Vehicle, clip { file = media/sound/TireThumper/flat2.ogg, distanceMax = 5, volume = 0.35, } }
+    sound TireThumper_flat3_faster_close { category = Vehicle, clip { file = media/sound/TireThumper/flat3.ogg, distanceMax = 5, volume = 0.35, } }
+    sound TireThumper_flat4_faster_close { category = Vehicle, clip { file = media/sound/TireThumper/flat4.ogg, distanceMax = 5, volume = 0.35, } }
+    sound TireThumper_flat5_faster_close { category = Vehicle, clip { file = media/sound/TireThumper/flat5.ogg, distanceMax = 5, volume = 0.35, } }
+    sound TireThumper_flat6_faster_close { category = Vehicle, clip { file = media/sound/TireThumper/flat6.ogg, distanceMax = 5, volume = 0.35, } }
 }
