@@ -2,7 +2,7 @@
 
 A [Project Zomboid](https://projectzomboid.com) Build 42 mod that plays rhythmic thumping sounds when you drive on a flat tire.
 
-No HUD. No pop-up. Just that sinking feeling as the noise gets faster and louder the harder you push it.
+Experience that sinking feeling as the thumping gets faster and louder the harder you push it.
 
 ![Tire Thumper](poster.png)
 
